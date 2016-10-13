@@ -69,6 +69,3 @@ The following directories are defined as volumes:
 
  * /var/lib/postgresql/data
  * /var/ssl - postgres looks here for your `server.crt` and `server.key` files
-
-## MIT License
-See the `LICENSE` file for full information.
