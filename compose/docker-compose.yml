@@ -1,0 +1,136 @@
+version: '2'
+
+services:
+    pg82:
+      ports:
+        - "54312:5432"
+      image: ignatov/docker-postgresql-8.2
+      env_file: .env
+
+    pg84:
+      ports:
+        - "54314:5432"
+      image: postgres:8.4
+      env_file: .env
+
+    pg90:
+      ports:
+        - "54320:5432"
+      image: postgres:9.0
+      env_file: .env
+
+    pg91:
+      ports:
+        - "54321:5432"
+      image: postgres:9.1
+      env_file: .env
+
+    pg92:
+      ports:
+        - "54322:5432"
+      image: postgres:9.2
+      env_file: .env
+
+    pg93:
+      ports:
+        - "54323:5432"
+      image: postgres:9.3
+      env_file: .env
+
+    pg94:
+      ports:
+        - "54324:5432"
+      image: postgres:9.4
+      env_file: .env
+
+    pg95:
+      ports:
+        - "54325:5432"
+      image: postgres:9.5
+      env_file: .env
+
+    mysql55:
+      privileged: true
+      ports:
+        - "33055:3306"
+      image: mysql:5.5
+      env_file: .env
+
+    mysql56:
+      ports:
+        - "33056:3306"
+      image: mysql:5.6
+      env_file: .env
+
+    mysql57:
+      ports:
+        - "33057:3306"
+      image: mysql:5.7
+      env_file: .env
+       
+    mysql51:
+      ports:
+        - "33051:3306"
+      image: ignatov/docker-mysql-5.1
+      env_file: .env
+
+    maria10:
+      ports:
+        - "33040:3306"
+      image: mariadb:10.0
+      env_file: .env
+
+    # oracle VM options
+    # -Duser.country=en -Duser.language=en
+    # todo: use debian:wheezy
+    oracle11:
+      ports:
+        - "1521:1521"
+      image: ignatov/docker-oracle-xe-11g
+      env_file: .env
+
+    db2:
+      privileged: true
+      image: ignatov/db2
+      ports:
+        - "50000:50000"
+      env_file: .env
+
+    hsqldb200:
+      image: chernov/hsqldb:2.0.0
+      ports:
+        - "9001:9001"
+      env_file: .env
+
+    hsqldb233:
+        image: chernov/hsqldb:2.3.3
+        ports:
+        - "9002:9001"
+        env_file: .env
+
+    derby1011:
+      image: chernov/derby-server:10.11
+      ports:
+        - "1527:1527"
+      env_file: .env
+
+    derby1012:
+      image: chernov/derby-server:10.12
+      ports:
+        - "1528:1527"
+      env_file: .env
+
+    h2:
+      image: chernov/h2:1.3
+      ports:
+        - "9092:9092"
+      env_file: .env
+
+    # needs about 30 seconds for proper start and initialization
+    sybase157:
+      image: chernov/sybase:latest
+      ports:
+        - "5000:5000"
+      env_file: .env
+      hostname: dksybase
+

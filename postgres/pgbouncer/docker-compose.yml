@@ -1,0 +1,13 @@
+pgbouncer:
+  image: chernov/pgbouncer
+  ports:
+    - "6432:6432"
+  env_file: .env   
+  links:
+    - postgres93:pg    
+
+postgres93:    
+  image: chernov/postgres9.3
+  ports:
+    - "54315:5432"
+  env_file: .env
