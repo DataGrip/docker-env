@@ -53,19 +53,19 @@ services:
       privileged: true
       ports:
         - "33055:3306"
-      image: mysql:5.5
+      image: ignatov/mysql:5.5
       env_file: .env
 
     mysql56:
       ports:
         - "33056:3306"
-      image: mysql:5.6
+      image: ignatov/mysql:5.6
       env_file: .env
 
     mysql57:
       ports:
         - "33057:3306"
-      image: mysql:5.7
+      image: ignatov/mysql:5.7
       env_file: .env
        
     mysql51:
