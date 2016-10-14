@@ -3,9 +3,9 @@ More info http://www.h2database.com/html/main.html
 Default db and sakila db are available
 ###### Pull container:
 ```bash
-docker pull chernov/h2
+docker pull datagrip/h2
 ```
 ###### Run container
 ```bash
-docker run -d -t -p 9092:9092 chernov/h2
+docker run -d -t -p 9092:9092 datagrip/h2
 ```

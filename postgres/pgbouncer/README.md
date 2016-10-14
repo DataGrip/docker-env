@@ -3,8 +3,8 @@ Works upon postgres 9.3 based on ubuntu:14.04
 
 #### Usage:
 ```
-docker pull chernov/ubuntu-postgres:9.3
-docker pull chernov/ubuntu-pgbouncer
+docker pull datagrip/postgres:9.3
+docker pull datagrip/pgbouncer
 docker-compose up -d pgbouncer
 ```
 #### Connection string:

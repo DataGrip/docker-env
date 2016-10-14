@@ -20,7 +20,7 @@ SYBASE_PASSWORD | password
 
 Create container
 ```bash
-docker run -d -t -p 5000:5000 -e "SYBASE_USER=guest" -h dksybase --name sybase157 chernov/sybase:latest
+docker run -d -t -p 5000:5000 -e "SYBASE_USER=guest" -h dksybase --name sybase157 datagrip/sybase:latest
 ```
 
 Install pubs2 test database
