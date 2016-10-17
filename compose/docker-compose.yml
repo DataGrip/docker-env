@@ -53,27 +53,37 @@ services:
       privileged: true
       ports:
         - "33055:3306"
-      image: ignatov/mysql:5.5
+      image: mysql:5.5
       env_file: .env
+      command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
 
     mysql56:
       ports:
         - "33056:3306"
-      image: ignatov/mysql:5.6
+      image: mysql:5.6
       env_file: .env
+      command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
 
     mysql57:
       ports:
         - "33057:3306"
-      image: ignatov/mysql:5.7
+      image: mysql:5.7
       env_file: .env
+      command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
        
     mysql51:
       ports:
         - "33051:3306"
       image: ignatov/docker-mysql-5.1
-      env_file: .env
+      env_file: .env      
 
+    mysql80:
+      image: mysql:8.0
+      ports:
+        - "33080:3306"
+      env_file: .env
+      command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
+      
     maria10:
       ports:
         - "33040:3306"
