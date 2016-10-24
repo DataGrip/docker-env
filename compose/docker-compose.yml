@@ -1,6 +1,7 @@
 version: '2'
 
 services:
+
     pg82:
       ports:
         - "54312:5432"
@@ -54,7 +55,13 @@ services:
         - "54326:5432"
       image: postgres:9.6
       env_file: .env
-      
+
+    mysql51:
+      ports:
+        - "33051:3306"
+      image: datagrip/mysql:5.1
+      env_file: .env
+
     mysql55:
       privileged: true
       ports:
@@ -76,12 +83,6 @@ services:
       image: mysql:5.7
       env_file: .env
       command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
-       
-    mysql51:
-      ports:
-        - "33051:3306"
-      image: datagrip/mysql:5.1
-      env_file: .env      
 
     mysql80:
       image: mysql:8.0
@@ -89,7 +90,7 @@ services:
         - "33080:3306"
       env_file: .env
       command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
-      
+
     maria10:
       ports:
         - "33040:3306"
@@ -113,38 +114,38 @@ services:
       env_file: .env
 
     hsqldb200:
-      image: chernov/hsqldb:2.0.0
+      image: datagrip/hsqldb:2.0.0
       ports:
         - "9001:9001"
       env_file: .env
 
     hsqldb233:
-        image: chernov/hsqldb:2.3.3
+        image: datagrip/hsqldb:2.3.3
         ports:
         - "9002:9001"
         env_file: .env
 
     derby1011:
-      image: chernov/derby-server:10.11
+      image: datagrip/derby-server:10.11
       ports:
         - "1527:1527"
       env_file: .env
 
     derby1012:
-      image: chernov/derby-server:10.12
+      image: datagrip/derby-server:10.12
       ports:
         - "1528:1527"
       env_file: .env
 
     h2:
-      image: chernov/h2:1.3
+      image: datagrip/h2:1.3
       ports:
         - "9092:9092"
       env_file: .env
 
     # needs about 30 seconds for proper start and initialization
     sybase157:
-      image: chernov/sybase:latest
+      image: datagrip/sybase:15.7
       ports:
         - "5000:5000"
       env_file: .env
