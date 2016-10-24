@@ -74,7 +74,7 @@ services:
     mysql51:
       ports:
         - "33051:3306"
-      image: ignatov/docker-mysql-5.1
+      image: datagrip/mysql:5.1
       env_file: .env      
 
     mysql80:
