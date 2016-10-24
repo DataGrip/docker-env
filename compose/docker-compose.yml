@@ -4,7 +4,7 @@ services:
     pg82:
       ports:
         - "54312:5432"
-      image: ignatov/docker-postgresql-8.2
+      image: datagrip/postgres:8.2
       env_file: .env
 
     pg84:
@@ -49,6 +49,12 @@ services:
       image: postgres:9.5
       env_file: .env
 
+    pg96:
+      ports:
+        - "54326:5432"
+      image: postgres:9.6
+      env_file: .env
+      
     mysql55:
       privileged: true
       ports:
