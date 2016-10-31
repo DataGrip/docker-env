@@ -5,7 +5,7 @@ Docker-compose for mysql 5.6 with ipv6 support
 `docker-compose up -d`
 
 ### Get ipv6 address
-#### Windows (MacOs)
+#### Windows and docker-machine
 ```bash
 docker-machine ip
 #192.168.99.100 (Default Windows)
@@ -30,7 +30,7 @@ Find interface that uses your docker machine ip address, e.g.:
 Your ipv6 address: `fe80::a00:27ff:fef4:d6c5`
 
 
-#### Linux:
+#### Linux or Mac OS X:
 Just use your localhost, e.g.:
 ```
 mysql -u guest -h ::1 -P 33016 -p guest
