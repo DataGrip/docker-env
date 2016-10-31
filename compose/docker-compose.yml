@@ -103,12 +103,12 @@ services:
     oracle11:
       ports:
         - "1521:1521"
-      image: ignatov/docker-oracle-xe-11g
+      image: datagrip/oracle:11.2
       env_file: .env
 
     db2:
       privileged: true
-      image: ignatov/db2
+      image: datagrip/db2
       ports:
         - "50000:50000"
       env_file: .env
