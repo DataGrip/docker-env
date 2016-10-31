@@ -5,10 +5,20 @@ services:
     image: mysql:5.6
     ports:
       - "33016:3306"
+      - "2022:22"
     env_file: .env
     networks:
       app_net:
         ipv6_address: 2001:3984:3989::10
+
+  pgipv6:
+    ports:
+      - "54315:5432"
+    image: postgres:9.5
+    env_file: .env
+    networks:
+      app_net:
+        ipv6_address: 2001:3984:3989::11
 
 networks:
   app_net:
