@@ -99,6 +99,6 @@ EOSQL
 #trap 
 while [ "$END" == '' ]; do
 			sleep 1
-			trap "/etc/init.d/oracle-xe stop && END=1" INT TERM
+			trap "/etc/init.d/sybase stop && END=1" INT TERM
 done
 
