@@ -9,7 +9,7 @@ ENV ACCEPT_EULA=Y
 ENV container=docker
 
 # sql server setup
-RUN /opt/mssql/bin/sqlservr-setup --accept-eula --set-sa-password
+RUN /opt/mssql/bin/mssql-conf setup accept-eula
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
