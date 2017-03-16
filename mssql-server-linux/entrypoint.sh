@@ -57,7 +57,8 @@ GO
 
 EOSQL
 
-sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"./init.sql" -o"./initout.log"
+cd /opt/mssql-tools/bin/
+./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init.sql" -o"/opt/mssql/initout.log"
 
 echo =============== INIT DATA CREATED 				   ==========================
 echo =============== MSSQL SERVER SUCCESSFULLY STARTED ==========================
