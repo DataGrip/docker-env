@@ -1,6 +1,6 @@
 #!/bin/bash
 #set -o errexit
-
+echo "im here"
 java_vm_parameters="-Dfile.encoding=UTF-8"
 
 if [ -n "${JAVA_VM_PARAMETERS}" ]; then
@@ -56,7 +56,7 @@ if [ -n "${HSQLDB_DATABASE_HOST}" ]; then
   hsqldb_host=${HSQLDB_DATABASE_HOST}
 fi
 
-  cat > /opt/hsqldb/sqltool.rc <<_EOF_
+cat > /opt/hsqldb/sqltool.rc <<_EOF_
 urlid ${hsqldb_database_alias}
 url jdbc:hsqldb:hsql://${hsqldb_host}/${hsqldb_database_alias}
 username SA
