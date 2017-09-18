@@ -1,4 +1,4 @@
-FROM exasol/docker-db:latest
+FROM exasol/docker-db:6.0.2-d1
 
 ADD "virtualschema-jdbc-adapter-dist-0.0.1-SNAPSHOT.jar" /
 ADD entrypoint.sh /
