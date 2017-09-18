@@ -20,6 +20,16 @@ if [ ! -f /exa/logs/logd/Authentication.log ]; then
     echo =============== ADAPTER ADDED TO DEFAULT BUCKET ==========================
 fi
 
+if [ ! -z $EXASOL_SCHEMA ]; then
+	echo "EXASOL_SCHEMA: $EXASOL_SCHEMA"
+else
+	EXASOL_SCHEMA=test
+	echo "EXASOL_SCHEMA: $EXASOL_SCHEMA"
+fi
+
+#creating default schema
+echo "CREATE SCHEMA $EXASOL_SCHEMA;" | ./usr/opt/EXASuite-6/EXASolution-6.0.2/bin/Console/exaplus -c n11:8888 -u sys -P exasol
+
 #trap
 while [ "$END" == '' ]; do
     sleep 1
