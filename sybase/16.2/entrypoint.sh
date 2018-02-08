@@ -1,7 +1,7 @@
 #!/bin/bash
 export SYBASE=/opt/sybase
-
-sh /opt/sybase/SYBASE.sh && sh /opt/sybase/ASE-15_0/install/RUN_DKSYBASE > /dev/null &
+source /opt/sybase/SYBASE.sh
+sh /opt/sybase/SYBASE.sh && sh /opt/sybase/ASE-16_0/install/RUN_MYSYBASE > /dev/null &
 
 #waiting for sybase to start
 export STATUS=0
@@ -10,16 +10,16 @@ echo "STARTING... (about 30 sec)"
 while [[ $STATUS -eq 0 ]] || [[ $i -lt 30 ]]; do
 	sleep 1
 	i=$((i+1))
-	STATUS=$(/etc/init.d/sybase status | grep DKSYBASE | wc -c)
+	STATUS=$(grep "server name is 'MYSYBASE'" /opt/sybase/ASE-16_0/install/MYSYBASE.log | wc -c)
 done
 
 echo =============== SYBASE STARTED ==========================
-cd /sybase
+cd /opt/sybase
 
 if [ ! -z $SYBASE_USER ]; then
 	echo "SYBASE_USER: $SYBASE_USER"	
 else
-	SYBASE_USER=guest
+	SYBASE_USER=tester
 	echo "SYBASE_USER: $SYBASE_USER"
 fi
 
@@ -33,7 +33,7 @@ fi
 if [ ! -z $SYBASE_DB ]; then
 	echo "SYBASE_DB: $SYBASE_DB"	
 else
-	SYBASE_DB=guest
+	SYBASE_DB=testdb
 	echo "SYBASE_DB: $SYBASE_DB"
 fi
 
@@ -41,7 +41,9 @@ echo =============== CREATING LOGIN/PWD ==========================
 cat <<-EOSQL > init1.sql
 use master
 go
-create database $SYBASE_DB
+disk resize name='master', size='30m'
+go
+create database $SYBASE_DB on master = '24m'
 go
 create login $SYBASE_USER with password $SYBASE_PASSWORD
 go
@@ -56,7 +58,7 @@ go
 
 EOSQL
 
-/opt/sybase/OCS-15_0/bin/isql -Usa -Ppassword -SDKSYBASE -i"./init1.sql"
+/opt/sybase/OCS-16_0/bin/isql -Usa -PmyPassword -SMYSYBASE -i"./init1.sql"
 
 echo =============== CREATING DB ==========================
 cat <<-EOSQL > init2.sql
@@ -83,7 +85,7 @@ go
 
 EOSQL
 
-/opt/sybase/OCS-15_0/bin/isql -Usa -Ppassword -SDKSYBASE -i"./init2.sql"
+/opt/sybase/OCS-16_0/bin/isql -Usa -PmyPassword -SMYSYBASE -i"./init2.sql"
 
 echo =============== CREATING SCHEMA ==========================
 cat <<-EOSQL > init3.sql
@@ -94,11 +96,10 @@ create schema authorization $SYBASE_USER
 go
 
 EOSQL
-/opt/sybase/OCS-15_0/bin/isql -Usa -Ppassword -SDKSYBASE -i"./init3.sql"
+/opt/sybase/OCS-16_0/bin/isql -Usa -PmyPassword -SMYSYBASE -i"./init3.sql"
 
 #trap 
 while [ "$END" == '' ]; do
 			sleep 1
 			trap "/etc/init.d/sybase stop && END=1" INT TERM
 done
-
