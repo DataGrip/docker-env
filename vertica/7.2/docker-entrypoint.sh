@@ -62,4 +62,3 @@ echo "Vertica is now running"
 while [ "${STOP_LOOP}" == "false" ]; do
   sleep 1
 done
-
