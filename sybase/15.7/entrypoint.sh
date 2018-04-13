@@ -53,6 +53,12 @@ exec sp_dboption $SYBASE_DB, 'ddl in tran', true
 go
 exec sp_dboption $SYBASE_DB, 'trunc log on chkpt', true
 go
+exec sp_dboption $SYBASE_DB, 'full logging for select into', true
+go
+exec sp_dboption $SYBASE_DB, 'full logging for alter table', true
+go
+sp_dboption $SYBASE_DB, "select into", true
+go
 
 EOSQL
 
