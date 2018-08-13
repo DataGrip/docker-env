@@ -43,7 +43,7 @@
     <path>/var/lib/clickhouse/</path>
     <tmp_path>/var/lib/clickhouse/tmp/</tmp_path>    
     <user_files_path>/var/lib/clickhouse/user_files/</user_files_path>
-    <users_config>users.xml</users_config>
+    <users_config>users_dg.xml</users_config>
     <default_profile>default</default_profile>
     <default_database>default</default_database>
 

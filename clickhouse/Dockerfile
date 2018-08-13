@@ -17,6 +17,7 @@ COPY docker_related_config.xml /etc/clickhouse-server/config.d/
 COPY ./config/test_dictionary.xml /opt/dictionaries/test_dictionary.xml
 COPY config_dg.xml /etc/clickhouse-server/
 COPY ./data/os.tsv /opt/dictionaries/os.tsv
+COPY ./config/users_dg.xml /etc/clickhouse-server/users_dg.xml
 
 RUN chown -R clickhouse /etc/clickhouse-server/ && \
     chown -R clickhouse /opt/dictionaries/
