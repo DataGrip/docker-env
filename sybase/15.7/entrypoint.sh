@@ -41,7 +41,11 @@ echo =============== CREATING LOGIN/PWD ==========================
 cat <<-EOSQL > init1.sql
 use master
 go
-create database $SYBASE_DB
+disk resize name='master', size='60m'
+go
+create database $SYBASE_DB on master = '48m'
+go
+alter database $SYBASE_DB log on master = '24m'
 go
 create login $SYBASE_USER with password $SYBASE_PASSWORD
 go
