@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 ARG repository="deb http://repo.yandex.ru/clickhouse/deb/stable/ main/"
-ARG version=\*
+ARG version=18.6.0
 
 RUN apt-get update && \
     apt-get install -y apt-transport-https dirmngr && \
@@ -23,7 +23,7 @@ RUN chown -R clickhouse /etc/clickhouse-server/ && \
     chown -R clickhouse /opt/dictionaries/
 
 USER clickhouse
-EXPOSE 9000 8123 9009
+EXPOSE 8123 9000
 VOLUME /var/lib/clickhouse
 
 ENV CLICKHOUSE_CONFIG /etc/clickhouse-server/config_dg.xml

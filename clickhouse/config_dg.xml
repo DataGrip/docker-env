@@ -70,7 +70,7 @@
 
     <builtin_dictionaries_reload_interval>3600</builtin_dictionaries_reload_interval>
     <max_session_timeout>3600</max_session_timeout>
-    <default_session_timeout>60</default_session_timeout>
+    <default_session_timeout>240</default_session_timeout>
 
     <query_log>
        
