@@ -5,31 +5,6 @@ set -e
 # or there are no args
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
 	set -- cassandra -f "$@"
-
-#     echo =============== WAITING FOR CASSANDRA ==========================
-#     #waiting for CASSANDRA to start
-#     export STATUS=0
-#     i=0
-#     while [[ $STATUS -eq 0 ]] || [[ $i -lt 90 ]]; do
-# 	    sleep 1
-# 	    i=$((i+1))
-# 	    STATUS=$(grep 'Created default superuser role' /var/log/cassandra/system.log | wc -l)
-#     done
-
-#     echo =============== CASSANDRA STARTED ==========================
-
-#     if [ ! -z $KEY_SPACE ]; then
-#         echo "KEY_SPACE: $KEY_SPACE"	
-#     else
-#         KEY_SPACE=guest
-#         echo "KEY_SPACE: $KEY_SPACE"
-#     fi
-    
-# cat <<-EOSQL > /tmp/init
-# CREATE KEYSPACE $KEY_SPACE WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
-# EOSQL
-
-#     cqlsh --file=/tmp/init
 fi
 
 # allow the container to be started with `--user`
