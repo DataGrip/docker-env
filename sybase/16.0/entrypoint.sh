@@ -86,8 +86,6 @@ grant create function to $SYBASE_USER
 go
 grant create procedure to $SYBASE_USER
 go
-sp_role "grant", sa_role, $SYBASE_USER
-go
 commit
 go
 
