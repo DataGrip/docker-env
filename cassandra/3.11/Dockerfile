@@ -23,13 +23,29 @@ RUN set -ex; \
 	rm -rf /var/lib/apt/lists/*
 
 # grab gosu for easy step-down from root
+ENV GPG_K B42F6819007F00F88E364FD4036A9C25BF357DD4
 ENV GOSU_VERSION 1.10
 RUN set -x \
 	&& apt-get update && apt-get install -y --no-install-recommends ca-certificates wget && rm -rf /var/lib/apt/lists/* \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+	&& (gpg --yes --always-trust --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+ 		|| gpg --yes --always-trust --keyserver pgp.mit.edu --recv-keys "$GPG_K" \
+ 		|| gpg --yes --always-trust --keyserver pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver keyserver.ubuntu.com --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver eu.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver na.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver oc.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver ipv6.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver ipv4.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver subset.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver hkp://jirk5u4osbsr34t5.onion --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver pgp.surfnet.nl --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver pgp.uni-mainz.de --recv-keys "$GPG_K" \
+ 		|| gpg --yes --always-trust --keyserver keyserver.pgp.com --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver hkps://hkps.pool.sks-keyservers.net --recv-keys "$GPG_K" \
+		|| gpg --yes --always-trust --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_K") \
 	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
 	&& { command -v gpgconf && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
@@ -151,6 +167,18 @@ RUN set -ex; \
     if grep -q -- '^enable_user_defined_functions: false' "$CASSANDRA_CONFIG/cassandra.yaml"; then \
         sed -ri 's/^enable_user_defined_functions:\sfalse$/enable_user_defined_functions:\ true/' "$CASSANDRA_CONFIG/cassandra.yaml"; \
     fi
+
+# authenticator: PasswordAuthenticator
+RUN set -ex; \
+	if grep -q -- '^authenticator: AllowAllAuthenticator' "$CASSANDRA_CONFIG/cassandra.yaml"; then \
+		sed -ri 's/^authenticator:\sAllowAllAuthenticator$/authenticator:\ PasswordAuthenticator' "$CASSANDRA_CONFIG/cassandra.yaml"; \
+	fi
+
+# authorizer: CassandraAuthorizer
+RUN set -ex; \
+	if grep -q -- '^authorizer: AllowAllAuthorizer' "$CASSANDRA_CONFIG/cassandra.yaml"; then \
+		sed -ri 's/^authorizer:\sAllowAllAuthorizer$/authorizer:\ CassandraAuthorizer' "$CASSANDRA_CONFIG/cassandra.yaml"; \
+	fi
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY entrypoint.sh /entrypoint.sh
