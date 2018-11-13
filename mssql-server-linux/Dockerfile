@@ -1,4 +1,4 @@
-FROM microsoft/mssql-server-linux:2017-CU3
+FROM microsoft/mssql-server-linux:2017-CU12
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
