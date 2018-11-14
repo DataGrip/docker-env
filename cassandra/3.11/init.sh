@@ -26,7 +26,7 @@ CREATE KEYSPACE $KEY_SPACE WITH replication = {'class':'SimpleStrategy', 'replic
 
 EOSQL
 
-cqlsh --file=/tmp/init
+cqlsh -u cassandra -p cassandra --file=/tmp/init
 
 echo =============== KEY_SPACE CREATED ==========================
 
