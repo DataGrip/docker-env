@@ -23,10 +23,11 @@ fi
 cd /tmp/
 cat <<-EOSQL > init
 CREATE KEYSPACE $KEY_SPACE WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
+CREATE USER IF NOT EXISTS limited_access_role WITH PASSWORD 'limited_access_role' NOSUPERUSER;
 
 EOSQL
 
-cqlsh --file=/tmp/init
+cqlsh -u cassandra -p cassandra --file=/tmp/init
 
 echo =============== KEY_SPACE CREATED ==========================
 
