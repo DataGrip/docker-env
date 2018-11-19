@@ -1,32 +1,17 @@
-FROM ubuntu:18.04
+FROM yandex/clickhouse-server:latest
 
-ARG repository="deb http://repo.yandex.ru/clickhouse/deb/stable/ main/"
-ARG version=18.6.0
-
-RUN apt-get update && \
-    apt-get install -y apt-transport-https dirmngr && \
-    mkdir -p /etc/apt/sources.list.d && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4 && \
-    echo $repository | tee /etc/apt/sources.list.d/clickhouse.list && \
-    apt-get update && \
-    env DEBIAN_FRONTEND=noninteractive apt-get install --allow-unauthenticated -y clickhouse-server=$version clickhouse-common-static=$version libgcc-7-dev && \
-    rm -rf /var/lib/apt/lists/* /var/cache/debconf && \
-    apt-get clean
-
-COPY docker_related_config.xml /etc/clickhouse-server/config.d/
-COPY ./config/test_dictionary.xml /opt/dictionaries/test_dictionary.xml
-COPY config_dg.xml /etc/clickhouse-server/
 COPY ./data/os.tsv /opt/dictionaries/os.tsv
-COPY ./config/users_dg.xml /etc/clickhouse-server/users_dg.xml
+COPY ./config/test_dictionary.xml /opt/dictionaries/test_dictionary.xml
 
-RUN chown -R clickhouse /etc/clickhouse-server/ && \
-    chown -R clickhouse /opt/dictionaries/
+ENV CLICKHOUSE_CONFIG /etc/clickhouse-server/config.xml
+ENV CLICKHOUSE_CONFD /etc/clickhouse-server/config.d/docker_related_config.xml
+ENV CLICKHOUSE_USER_CONFIG /etc/clickhouse-server/users.xml
 
-USER clickhouse
-EXPOSE 8123 9000
-VOLUME /var/lib/clickhouse
+RUN sed -ri 's/<dictionaries_config>\*_dictionary\.xml<\/dictionaries_config>/<dictionaries_config>\/opt\/dictionaries\/test_dictionary.xml<\/dictionaries_config>/' ${CLICKHOUSE_CONFIG}
+RUN sed -ri 's/<ip>\:\:1<\/ip>/<ip>\:\:\/0<\/ip>/' ${CLICKHOUSE_USER_CONFIG}
+RUN sed -ri 's/<ip>127\.0\.0\.1<\/ip>/\ /' ${CLICKHOUSE_USER_CONFIG}
+RUN sed -ri 's/<\/listen_try>/<\/listen_try>\n\t<keep_alive_timeout>240<\/keep_alive_timeout>/' ${CLICKHOUSE_CONFD}
 
-ENV CLICKHOUSE_CONFIG /etc/clickhouse-server/config_dg.xml
+ENTRYPOINT ["/entrypoint.sh"]
 
-# todo: here we need to define custom entrypoint sh file with config substitution
-ENTRYPOINT exec /usr/bin/clickhouse-server --config=${CLICKHOUSE_CONFIG}
+CMD /usr/bin/clickhouse-server --config=${CLICKHOUSE_CONFIG}
