@@ -1,4 +1,4 @@
-FROM cassandra:3
+FROM cassandra:3.0
 
 ADD entrypoint.sh /
 ADD init.sh /
