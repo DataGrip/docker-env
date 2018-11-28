@@ -1,4 +1,4 @@
-FROM cjonesy/docker-vertica:7.2.3-18
+FROM cjonesy/docker-vertica:7.1.2-21
 
 COPY ./docker-entrypoint.sh /opt/vertica/bin/
 
