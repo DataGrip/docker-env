@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+    greenplum_5.17:
+      # jdbc:postgresql://localhost:54303/gpadmin?user=gpadmin&password=pivotal
+      container_name: greenplum517
+      ports:
+        - "54303:5432"
+      image: datagrip/greenplum:5.17
+      privileged: true
+      security_opt:
+       - seccomp:unconfined
+      healthcheck:
+        test: grep -r -i --include \*.log "Database successfully started" || exit 1
