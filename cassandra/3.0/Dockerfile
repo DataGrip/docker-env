@@ -2,6 +2,8 @@ FROM cassandra:3.0
 
 ADD entrypoint.sh /
 ADD init.sh /
+ADD AuditTrigger.jar /etc/cassandra/triggers/
+ADD AuditTrigger.properties /etc/cassandra/
 
 ENV CASSANDRA_CONFIG /etc/cassandra
 
