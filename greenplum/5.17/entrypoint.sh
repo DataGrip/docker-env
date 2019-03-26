@@ -34,17 +34,21 @@ fi
 sudo su - gp bash -c "/opt/gpdb/bin/psql -v ON_ERROR_STOP=1 --username gp --dbname postgres <<-EOSQL
 CREATE USER $GP_USER WITH PASSWORD '$GP_PASSWORD' SUPERUSER;
 CREATE DATABASE $GP_DB WITH OWNER $GP_USER;
+CREATE USER guest WITH PASSWORD 'guest';
+CREATE DATABASE guest WITH OWNER guest;
 EOSQL"
 
 cat << EOF
 +-------------------------------------------------
 |  CREATE USER $GP_USER WITH PASSWORD '$GP_PASSWORD' SUPERUSER;
+|  CREATE USER guest WITH PASSWORD 'guest';
 +-------------------------------------------------
 EOF
 
 cat << EOF
 +-------------------------------------------------
 |  CREATE DATABASE $GP_DB WITH OWNER $GP_USER;
+|  CREATE DATABASE guest WITH OWNER guest;
 +-------------------------------------------------
 EOF
 
