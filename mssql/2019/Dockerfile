@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/mssql/server:vNext-CTP2.0-ubuntu
+FROM mcr.microsoft.com/mssql/server:2019-CTP2.5-ubuntu
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
