@@ -1,4 +1,4 @@
-FROM yandex/clickhouse-server:latest
+FROM yandex/clickhouse-server:18
 
 COPY ./data/os.tsv /opt/dictionaries/os.tsv
 COPY ./config/test_dictionary.xml /opt/dictionaries/test_dictionary.xml
