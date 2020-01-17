@@ -1,4 +1,4 @@
-#!/bin/bash
+-#!/bin/bash
 export STATUS=0
 i=0
 echo "STARTING... (about 30 sec)"
@@ -11,21 +11,21 @@ done
 echo "STARTED"
 
 if [ ! -z $GP_USER ]; then
-	echo "GP_USER: $GP_USER"	
+	echo "GP_USER: $GP_USER"
 else
 	GP_USER=tester
 	echo "GP_USER: $GP_USER"
 fi
 
 if [ ! -z $GP_PASSWORD ]; then
-	echo "GP_PASSWORD: $GP_PASSWORD"	
+	echo "GP_PASSWORD: $GP_PASSWORD"
 else
 	GP_PASSWORD=pivotal
 	echo "GP_PASSWORD: $GP_PASSWORD"
 fi
 
 if [ ! -z $GP_DB ]; then
-	echo "GP_DB: $GP_DB"	
+	echo "GP_DB: $GP_DB"
 else
 	GP_DB=testdb
 	echo "GP_DB: $GP_DB"
