@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/mssql/server:2019-CU1-ubuntu-16.04
+FROM mcr.microsoft.com/mssql/server:2019-CU2-ubuntu-16.04
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -15,7 +15,7 @@ chmod +x /init.sh"]
 RUN apt-get update && \
     apt-get install -y curl && \
     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-preview.list | tee /etc/apt/sources.list.d/msprod.list
+    curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2019.list | tee /etc/apt/sources.list.d/msprod.list
 
 RUN apt-get update && \
     apt-get install -y mssql-server-fts mssql-tools
