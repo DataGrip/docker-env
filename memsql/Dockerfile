@@ -1,4 +1,5 @@
-FROM memsql/quickstart:minimal-6.0.14
+# FROM memsql/quickstart:minimal-6.0.14
+FROM memsql/quickstart:minimal-6.7.14
 ADD schema.sql /
 
 ENTRYPOINT ["/memsql-entrypoint.sh"]

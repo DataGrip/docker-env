@@ -1,9 +1,13 @@
 #!/bin/bash
 
-USER=${MONGODB_USER:-"admin"}
-DATABASE=${MONGODB_DATABASE:-"admin"}
-PASS=${MONGODB_PASS:-$(pwgen -s 12 1)}
-_word=$( [ ${MONGODB_PASS} ] && echo "preset" || echo "random" )
+MONGO_ADMIN=${MONGO_ADMIN:-"admin"}
+MONGO_A_DB=${MONGO_A_DB:-"admin"}
+MONGO_A_PWD=${MONGO_A_PWD:-$(pwgen -s 12 1)}
+_word=$( [ ${MONGO_A_PWD} ] && echo "preset" || echo "random" )
+
+USER=${MONGODB_USER:-"guest"}
+DATABASE=${MONGODB_DATABASE:-"guest"}
+PASS=${MONGODB_PASS:-"guest"}
 
 RET=1
 while [[ RET -ne 0 ]]; do
@@ -13,16 +17,15 @@ while [[ RET -ne 0 ]]; do
     RET=$?
 done
 
-echo "=> Creating an ${USER} user with a ${_word} password in MongoDB"
-mongo admin --eval "db.createUser({user: '$USER', pwd: '$PASS', roles:[{role:'root',db:'admin'}]});"
+echo "=> Creating an ${MONGO_ADMIN} user with a ${_word} password in MongoDB"
+mongo admin --eval "db.createUser({user: '$MONGO_ADMIN', pwd: '$MONGO_A_PWD', roles:[{role:'root',db:'$MONGO_A_DB'}]});"
 
-if [ "$DATABASE" != "admin" ]; then
-    echo "=> Creating an ${USER} user with a ${_word} password in MongoDB"
-    mongo admin -u $USER -p $PASS << EOF
+
+echo "=> Creating an ${USER} user with a ${PASS} password in MongoDB"
+mongo admin -u $MONGO_ADMIN -p ${MONGO_A_PWD} << EOF
+db.createUser({user: '$USER', pwd: '$PASS', roles: [{ role: 'userAdminAnyDatabase', db: '$MONGO_A_DB' }, 'readWriteAnyDatabase']})
 use $DATABASE
-db.createUser({user: '$USER', pwd: '$PASS', roles:[{role:'dbOwner',db:'$DATABASE'}]})
 EOF
-fi
 
 echo "=> Done!"
 touch /data/db/.mongodb_password_set
