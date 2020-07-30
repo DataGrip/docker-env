@@ -2,5 +2,5 @@ CREATE SCHEMA adapter;
 
 CREATE JAVA ADAPTER SCRIPT adapter.jdbc_adapter AS
  %scriptclass com.exasol.adapter.jdbc.JdbcAdapter;
- %jar /buckets/bfsdefault/default/virtualschema-jdbc-adapter-dist-0.0.1-SNAPSHOT.jar;
+ %jar /buckets/bfsdefault/default/virtual-schema-jdbc-adapter-4.0.2.jar;
 /

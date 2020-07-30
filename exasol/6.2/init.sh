@@ -12,8 +12,8 @@ done
 
 echo =============== PUTTING ADAPTER TO DEFAULT BUCKET ==========================
 #get default bucket write password
-BW_PWD=$(grep 'write-password' /exa/etc/bucketfs.cfg | sed "s/write-password = //g" | base64 -d)
-curl -X PUT -T /virtualschema-jdbc-adapter-dist-0.0.1-SNAPSHOT.jar http://w:$BW_PWD@localhost:6583/default/virtualschema-jdbc-adapter-dist-0.0.1-SNAPSHOT.jar
+BW_PWD=$(grep 'write-password' /exa/etc/bucketfs.cfg_bfsdefault | sed "s/write-password = //g" | base64 -d)
+curl -X PUT -T /virtual-schema-jdbc-adapter-4.0.2.jar http://w:$BW_PWD@localhost:6583/default/virtual-schema-jdbc-adapter-4.0.2.jar
 
 
 if [ ! -f /exa/logs/logd/Authentication.log ]; then

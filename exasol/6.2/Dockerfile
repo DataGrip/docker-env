@@ -1,10 +1,10 @@
 FROM exasol/docker-db:latest-6.2
 
-ADD "virtualschema-jdbc-adapter-dist-0.0.1-SNAPSHOT.jar" /
+ADD "virtual-schema-jdbc-adapter-4.0.2.jar" /
 ADD entrypoint.sh /
 ADD init.sh /
 
-RUN ["/bin/bash", "-c", "chmod +x /virtualschema-jdbc-adapter-dist-0.0.1-SNAPSHOT.jar &&\
+RUN ["/bin/bash", "-c", "chmod +x /virtual-schema-jdbc-adapter-4.0.2.jar &&\
 chmod +x entrypoint.sh &&\
 chmod +x init.sh"]
 
