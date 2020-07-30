@@ -1,7 +1,22 @@
 CREATE SCHEMA SCHEMA_FOR_VS_SCRIPT;
+/
 
-CREATE JAVA ADAPTER SCRIPT SCHEMA_FOR_VS_SCRIPT.JDBC_ADAPTER_SCRIPT AS
-  %scriptclass com.exasol.adapter.RequestDispatcher;
-  %jar /buckets/your-bucket-fs/your-bucket/virtual-schema-dist-5.0.2-bundle-4.0.2.jar;
-  %jar /buckets/bfsdefault/default/virtual-schema-jdbc-adapter-4.0.2.jar;
+CREATE JAVA ADAPTER SCRIPT SCHEMA_FOR_VS_SCRIPT.ADAPTER_SCRIPT_EXASOL AS
+    %scriptclass com.exasol.adapter.RequestDispatcher;
+    %jar /buckets/bfsdefault/default/virtual-schema-dist-5.0.2-exasol-3.0.2.jar;
+/
+
+CREATE CONNECTION EXASOL_CONNECTION
+  TO 'jdbc:exa:localhost:8888'
+  USER 'SYS'
+  IDENTIFIED BY 'exasol';
+/
+
+CREATE VIRTUAL SCHEMA VIRTUAL_EXASOL
+    USING SCHEMA_FOR_VS_SCRIPT.ADAPTER_SCRIPT_EXASOL WITH
+    SQL_DIALECT     = 'EXASOL'
+    CONNECTION_NAME = 'EXASOL_CONNECTION'
+    SCHEMA_NAME     = 'TEST'
+    IMPORT_FROM_EXA = 'true'
+    EXA_CONNECTION_STRING = 'localhost:8888';
 /

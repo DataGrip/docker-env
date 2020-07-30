@@ -13,8 +13,7 @@ done
 echo =============== PUTTING ADAPTER TO DEFAULT BUCKET ==========================
 #get default bucket write password
 BW_PWD=$(grep 'write-password' /exa/etc/bucketfs.cfg_bfsdefault | sed "s/write-password = //g" | base64 -d)
-curl -X PUT -T /virtual-schema-jdbc-adapter-4.0.2.jar http://w:$BW_PWD@localhost:6583/default/virtual-schema-jdbc-adapter-4.0.2.jar
-
+curl -X PUT -T /virtual-schema-dist-5.0.2-exasol-3.0.2.jar http://w:$BW_PWD@localhost:6583/default/virtual-schema-dist-5.0.2-exasol-3.0.2.jar
 
 if [ ! -f /exa/logs/logd/Authentication.log ]; then
     echo =============== ADAPTER ADDED TO DEFAULT BUCKET ==========================
@@ -29,6 +28,8 @@ fi
 
 #creating default schema
 echo "CREATE SCHEMA $EXASOL_SCHEMA;" | ./usr/opt/EXASuite-6/EXASolution-${EXA_RE_VERSION?}/bin/Console/exaplus -c n11:8888 -u sys -P exasol
+
+echo =============== EXASOL STARTED ==========================
 
 #trap
 while [ "$END" == '' ]; do
