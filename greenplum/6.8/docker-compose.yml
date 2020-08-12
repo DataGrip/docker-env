@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+    greenplum_6.8:
+      container_name: greenplum_6.8
+      ports:
+        - "54305:5432"
+      image: datagrip/greenplum:6.8
+      privileged: true
+      hostname: greenplum_6.8.1
+      security_opt:
+       - seccomp:unconfined
+      healthcheck:
+        test: grep -r -i --include \*.log "Database successfully started" || exit 1
