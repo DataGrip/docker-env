@@ -12,7 +12,7 @@ while [[ $STATUS -eq 0 ]] || [[ $i -lt 30 ]]; do
 	STATUS=$(grep -r "Apache CouchDB has started on.*" /opt/couchbase/var/lib/couchbase/logs/couchdb.log | wc -l)
 done
 
-curl -v -X POST http://127.0.0.1:8091/pools/default -d memoryQuota=512 -d indexMemoryQuota=512 -d ftsMemoryQuota=512
+curl -v -X POST http://127.0.0.1:8091/pools/default -d memoryQuota=1024 -d indexMemoryQuota=1024 -d ftsMemoryQuota=1024
 curl -v http://127.0.0.1:8091/node/controller/setupServices -d services=kv%2Cn1ql%2Cindex%2Cfts
 curl -v http://127.0.0.1:8091/settings/web -d port=8091 -d username=Administrator -d password=password
 curl -v -X POST http://127.0.0.1:8091/pools/default/buckets \
