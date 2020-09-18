@@ -12,6 +12,8 @@ while [[ $STATUS -eq 0 ]] || [[ $i -lt 30 ]]; do
 	STATUS=$(grep -r "Apache CouchDB has started on.*" /opt/couchbase/var/lib/couchbase/logs/couchdb.log | wc -l)
 done
 
+yes | ./opt/couchbase/bin/couchbase-cli enable-developer-preview --enable -c localhost:8091 -u Administrator -p password
+
 if [ ! -z $COUCH_ADMPWD ]; then
 	echo "COUCH_ADMPWD: $COUCH_ADMPWD"
 else
