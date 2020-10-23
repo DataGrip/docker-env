@@ -5,12 +5,27 @@ sh /opt/sybase/SYBASE.sh && sh /opt/sybase/ASE-16_0/install/RUN_MYSYBASE > /dev/
 
 #waiting for sybase to start
 export STATUS=0
-i=0
-echo "STARTING... (about 30 sec)"
-while [[ $STATUS -eq 0 ]] || [[ $i -lt 30 ]]; do
+i=1
+echo ===============  WAITING FOR master.dat SPACE ALLOCATION ==========================
+while (( $i < 60 )); do
 	sleep 1
 	i=$((i+1))
-	STATUS=$(grep "server name is 'MYSYBASE'" /opt/sybase/ASE-16_0/install/MYSYBASE.log | wc -c)
+	STATUS=$(grep "Performing space allocation for device '/opt/sybase/data/master.dat'" /opt/sybase/ASE-16_0/install/MYSYBASE.log | wc -c)
+	if (( $STATUS > 300 )); then
+	  break
+	fi
+done
+
+echo ===============  WAITING FOR INITIALIZATION ==========================
+export STATUS2=0
+j=1
+while (( $j < 30 )); do
+  sleep 1
+  j=$((j+1))
+  STATUS2=$(grep "Finished initialization." /opt/sybase/ASE-16_0/install/MYSYBASE.log | wc -c)
+  if (( $STATUS2 > 350 )); then
+    break
+  fi
 done
 
 echo =============== SYBASE STARTED ==========================
@@ -95,15 +110,17 @@ EOSQL
 
 /opt/sybase/OCS-16_0/bin/isql -Usa -PmyPassword -SMYSYBASE -i"./init2.sql"
 
-echo =============== CREATING SCHEMA ==========================
-cat <<-EOSQL > init3.sql
-use $SYBASE_DB
-go
-create schema authorization $SYBASE_USER
-go
+#echo =============== CREATING SCHEMA ==========================
+#cat <<-EOSQL > init3.sql
+#use $SYBASE_DB
+#go
+#create schema authorization $SYBASE_USER
+#go
+#
+#EOSQL
+#/opt/sybase/OCS-16_0/bin/isql -Usa -PmyPassword -SMYSYBASE -i"./init3.sql"
 
-EOSQL
-/opt/sybase/OCS-16_0/bin/isql -Usa -PmyPassword -SMYSYBASE -i"./init3.sql"
+echo =============== SYBASE INITIALIZED ==========================
 
 #trap 
 while [ "$END" == '' ]; do
