@@ -6,10 +6,15 @@ set -m
 
 export STATUS=0
 i=0
-while [[ $STATUS -eq 0 ]] || [[ $i -lt 30 ]]; do
+while (( $i < 30 )); do
 	sleep 1
 	i=$((i+1))
-	STATUS=$(grep -r "Apache CouchDB has started on.*" /opt/couchbase/var/lib/couchbase/logs/couchdb.log | wc -l)
+	echo $i
+	STATUS=$(grep -r "Server has started on.*" /opt/couchbase/var/lib/couchbase/logs/info.log | wc -l)
+	if (( $STATUS != 0 )); then
+ 		echo "Server has started"
+ 		break
+ 	fi
 done
 
 yes | ./opt/couchbase/bin/couchbase-cli enable-developer-preview --enable -c localhost:8091 -u Administrator -p password
@@ -28,26 +33,35 @@ else
 	echo "COUCH_USRPWD: $COUCH_USRPWD"
 fi
 
-curl -v -X POST http://127.0.0.1:8091/pools/default \
--u Administrator:password \
--d memoryQuota=1024 \
--d indexMemoryQuota=1024 \
--d ftsMemoryQuota=1024
 
-curl -v http://127.0.0.1:8091/node/controller/setupServices \
--u Administrator:password \
--d services=kv%2Cn1ql%2Cindex%2Cfts
+# Initialize Node
+curl  -u Administrator:password -v -X POST \
+  http://localhost:8091/nodes/self/controller/settings \
+  -d 'path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&' \
+  -d 'index_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&' \
+  -d 'cbas_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&' \
+  -d 'eventing_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&'
 
-# curl -v http://127.0.0.1:8091/settings/web \
-# -u Administrator:password \
-# -d port=8091
+# services
+curl  -u Administrator:password -v -X POST http://localhost:8091/node/controller/setupServices \
+  -d 'services=kv%2Cn1ql%2Cindex%2Cfts'
 
-curl -v -X POST http://127.0.0.1:8091/pools/default/buckets \
--u Administrator:password \
--d name=guest \
--d ramQuotaMB=512 \
--d bucketType=ephemeral
+# Memory Quotas
+curl  -u Administrator:password -v -X POST http://localhost:8091/pools/default \
+  -d 'memoryQuota=256' \
+  -d 'indexMemoryQuota=256' \
+  -d 'ftsMemoryQuota=256'
 
+# Administrator username and password
+curl  -u Administrator:password -v -X POST http://localhost:8091/settings/web \
+  -d 'password=password&username=Administrator&port=SAME'
+
+# bucket
+curl  -u Administrator:password -v -X POST http://localhost:8091/pools/default/buckets \
+  -d 'flushEnabled=1&threadsNumber=3&replicaIndex=0&replicaNumber=0& \
+  evictionPolicy=valueOnly&ramQuotaMB=256&bucketType=membase&name=guest'
+
+# indexes
 curl -v -X POST http://127.0.0.1:8091/settings/indexes \
 -u Administrator:password \
 -d indexerThreads=0 \
@@ -57,11 +71,13 @@ curl -v -X POST http://127.0.0.1:8091/settings/indexes \
 -d stableSnapshotInterval=5000 \
 -d storageMode=memory_optimized
 
+# admin user
 curl -v -X  PUT -u Administrator:password \
 http://localhost:8091/settings/rbac/users/local/admin \
 -d password=$COUCH_ADMPWD \
 -d roles=admin
 
+# read only admin
 curl -v -X  PUT -u Administrator:password \
 http://localhost:8091/settings/rbac/users/local/roadmin \
 -d password=$COUCH_USRPWD \

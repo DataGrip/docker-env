@@ -1,4 +1,4 @@
-FROM couchbase/server:enterprise-7.0.0-beta
+FROM couchbase/server:enterprise-7.0.2
 
 COPY config.sh /opt/couchbase
 RUN chmod +x /opt/couchbase/config.sh
