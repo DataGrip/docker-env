@@ -55,8 +55,24 @@ GO
 
 EOSQL
 
+cat <<-EOSQL > init_memory.sql
+sp_configure 'show advanced options', 1;
+GO
+RECONFIGURE;
+GO
+sp_configure 'min server memory', 2048;
+GO
+RECONFIGURE;
+GO
+sp_configure 'max server memory', 4096;
+GO
+RECONFIGURE;
+GO
+EOSQL
+
 cd /opt/mssql-tools/bin/
 ./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init.sql" -o"/opt/mssql/initout.log"
+./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init_memory.sql" -o"/opt/mssql/initout2.log"
 
 echo =============== INIT DATA CREATED ==========================
 echo =============== MSSQL SERVER SUCCESSFULLY STARTED ==========================
