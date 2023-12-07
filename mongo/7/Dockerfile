@@ -1,4 +1,4 @@
-FROM mongo:6.0.4-jammy
+FROM mongo:7-jammy
 
 VOLUME /data/db
 
