@@ -1,6 +1,7 @@
 #!/bin/bash
 export SYBASE=/opt/sybase
 source /opt/sybase/SYBASE.sh
+
 sh /opt/sybase/SYBASE.sh && sh /opt/sybase/ASE-16_0/install/RUN_MYSYBASE > /dev/null &
 
 #waiting for sybase to start
@@ -32,21 +33,21 @@ echo =============== SYBASE STARTED ==========================
 cd /opt/sybase
 
 if [ ! -z $SYBASE_USER ]; then
-	echo "SYBASE_USER: $SYBASE_USER"	
+	echo "SYBASE_USER: $SYBASE_USER"
 else
 	SYBASE_USER=tester
 	echo "SYBASE_USER: $SYBASE_USER"
 fi
 
 if [ ! -z $SYBASE_PASSWORD ]; then
-	echo "SYBASE_PASSWORD: $SYBASE_PASSWORD"	
+	echo "SYBASE_PASSWORD: $SYBASE_PASSWORD"
 else
 	SYBASE_PASSWORD=guest1234
 	echo "SYBASE_PASSWORD: $SYBASE_PASSWORD"
 fi
 
 if [ ! -z $SYBASE_DB ]; then
-	echo "SYBASE_DB: $SYBASE_DB"	
+	echo "SYBASE_DB: $SYBASE_DB"
 else
 	SYBASE_DB=testdb
 	echo "SYBASE_DB: $SYBASE_DB"
@@ -122,7 +123,7 @@ EOSQL
 
 echo =============== SYBASE INITIALIZED ==========================
 
-#trap 
+#trap
 while [ "$END" == '' ]; do
 			sleep 1
 			trap "/etc/init.d/sybase stop && END=1" INT TERM
