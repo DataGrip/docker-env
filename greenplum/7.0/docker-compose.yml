@@ -1,0 +1,29 @@
+version: '2.1'
+
+services:
+    greenplum_7:
+      container_name: greenplum_7
+      ports:
+        - "54305:5432"
+      image: datagrip/greenplum:7
+#      image: lhrbest/greenplum:7.0.0_v2
+      privileged: true
+      #environment:
+      #  - COORDINATOR_DATA_DIRECTORY=/gpcoordinator/data/
+      hostname: gpdb7
+      security_opt:
+       - seccomp:unconfined
+      healthcheck:
+        test: grep -r -i --include \*.log "Database successfully started" || exit 1
+#      
+#    ssh_jump:
+#      container_name: ssh_jump_gp
+#      image: datagrip/ssh-jumphost
+#      ports:
+#        - "2222:22"
+#      volumes:
+#        - ~/.ssh/temp/:/keys
+#      environment:
+#        - USER=$USER
+#      healthcheck:
+#        test: "exit 0"
