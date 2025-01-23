@@ -1,0 +1,1 @@
+docker db2 12.1 based on icr.io/db2_community/db2
