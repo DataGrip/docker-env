@@ -6,13 +6,13 @@ source ${SETUPDIR?}/include/db2_common_functions
 enable_explain_plan()
 {
     echo "(*) Enabling explain plan feature"
-    su - ${DB2INSTANCE?} -c "db2 connect to ${DBNAME?} && db2 -f /var/custom/init.sql"
+    su - ${DB2INSTANCE?} -c "db2 connect to ${DBNAME?} && db2 -f /var/sql/init.sql"
 }
 
 create_buffer_pool()
 {
     echo "(*) Creating buffer pool and table space"
-    su - ${DB2INSTANCE?} -c "db2 connect to ${DBNAME?} && db2 -f /var/custom/initspatial.sql"
+    su - ${DB2INSTANCE?} -c "db2 connect to ${DBNAME?} && db2 -f /var/sql/initspatial.sql"
 }
 
 enable_spatial_operations()
@@ -26,7 +26,7 @@ start_server_listener()
     echo "(*) Restarting Db2 server's listener"
     su - ${DB2INSTANCE?} -c "
     db2set db2comm=tcpip
-    db2 'update DBM CFG using SVCENAME 60000'
+    db2 'update DBM CFG using SVCENAME 50000'
     db2stop
     db2start"
 }
