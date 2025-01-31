@@ -1,13 +1,15 @@
-FROM icr.io/db2_community/db2
+FROM icr.io/db2_community/db2:12.1.0.0
 
 
-RUN mkdir /var/custom
+RUN mkdir /var/custom \
+    mkdir /var/sql
+
 COPY createschema.sh /var/custom/createschema.sh
-COPY init.sql /var/custom/init.sql
-COPY initspatial.sql /var/custom/initspatial.sql
+COPY init.sql /var/sql/init.sql
+COPY initspatial.sql /var/sql/initspatial.sql
 
 RUN chmod a+x /var/custom/createschema.sh
-RUN chmod a+x /var/custom/init.sql
-RUN chmod a+x /var/custom/initspatial.sql
+RUN chmod a+x /var/sql/init.sql
+RUN chmod a+x /var/sql/initspatial.sql
 
 EXPOSE 50000
