@@ -1,11 +1,11 @@
 FROM exasol/docker-db:8.32.0
 
-COPY "virtual-schema-dist-9.0.2-exasol-5.0.1.jar" /
+COPY "virtual-schema-dist-12.0.0-exasol-8.0.0.jar" /
 
 COPY entrypoint.sh /
 COPY init.sh /
 
-RUN ["/bin/bash", "-c", "chmod +x /virtual-schema-dist-9.0.2-exasol-5.0.1.jar &&\
+RUN ["/bin/bash", "-c", "chmod +x /virtual-schema-dist-12.0.0-exasol-8.0.0.jar &&\
 chmod +x entrypoint.sh &&\
 chmod +x init.sh"]
 

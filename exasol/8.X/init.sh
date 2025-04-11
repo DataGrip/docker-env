@@ -11,7 +11,7 @@ echo "EXASOL is ready!"
 echo =============== PUTTING ADAPTER TO DEFAULT BUCKET ==========================
 #get default bucket write password
 export BW_PWD=$(grep 'write-password' /exa/etc/bucketfs.cfg_bfsdefault | sed "s/write-password = //g" | base64 -d)
-curl -X PUT -T /virtual-schema-dist-9.0.2-exasol-5.0.1.jar https://w:$BW_PWD@localhost:2581/default/virtual-schema-dist-9.0.2-exasol-5.0.1.jar -f --insecure
+curl -f --insecure -X PUT -T /virtual-schema-dist-12.0.0-exasol-8.0.0.jar https://w:$BW_PWD@localhost:2581/default/virtual-schema-dist-12.0.0-exasol-8.0.0.jar
 
 if [ ! -f /exa/logs/logd/Authentication.log ]; then
     echo =============== ADAPTER ADDED TO DEFAULT BUCKET ==========================
