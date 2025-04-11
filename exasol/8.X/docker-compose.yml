@@ -1,0 +1,17 @@
+services:
+
+    exasol8:
+        # jdbc:exa:localhost:8564;validateservercertificate=0;schema=test;user=SYS;password=exasol
+        container_name: exasol8
+        privileged: true
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        ports:
+            - "8564:8563"
+        healthcheck:
+            test: ["CMD", "curl", "-kfsS", "-o", "/dev/null", "https://localhost:2581/"]
+            interval: 3m
+            timeout: 10s
+            retries: 5
+
