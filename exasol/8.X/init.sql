@@ -3,13 +3,13 @@ CREATE SCHEMA SCHEMA_FOR_VS_SCRIPT;
 
 CREATE JAVA ADAPTER SCRIPT SCHEMA_FOR_VS_SCRIPT.ADAPTER_SCRIPT_EXASOL AS
     %scriptclass com.exasol.adapter.RequestDispatcher;
-    %jar /buckets/bfsdefault/default/virtual-schema-dist-9.0.2-exasol-5.0.1.jar;
+    %jar /buckets/bfsdefault/default/virtual-schema-dist-12.0.0-exasol-8.0.0.jar;
 /
 
 CREATE CONNECTION EXASOL_CONNECTION
-  TO 'jdbc:exa:localhost:8888'
-  USER 'SYS'
-  IDENTIFIED BY 'exasol';
+    TO 'jdbc:exa:localhost:8888'
+    USER 'SYS'
+    IDENTIFIED BY 'exasol';
 /
 
 CREATE VIRTUAL SCHEMA VIRTUAL_EXASOL
