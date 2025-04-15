@@ -20,10 +20,10 @@ chmod +x /init.sh"]
 # https://github.com/microsoft/go-sqlcmd/discussions/501#discussion-6088877
 WORKDIR /opt/mssql-tools/bin
 
-RUN wget https://github.com/microsoft/go-sqlcmd/releases/download/${GOSQLCMD_VERSION}/sqlcmd-linux-arm64.tar.bz2 \
- && tar -xjf sqlcmd-linux-arm64.tar.bz2 \
+RUN wget https://github.com/microsoft/go-sqlcmd/releases/download/${GOSQLCMD_VERSION}/sqlcmd-linux-amd64.tar.bz2 \
+ && tar -xjf sqlcmd-linux-amd64.tar.bz2 \
  && chmod +x sqlcmd \
- && rm sqlcmd-linux-arm64.tar.bz2
+ && rm sqlcmd-linux-amd64.tar.bz2
 
 WORKDIR /
 
