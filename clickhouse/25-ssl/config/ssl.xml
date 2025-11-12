@@ -1,0 +1,49 @@
+<clickhouse>
+
+    <!-- <http_port>8123</http_port> -->
+    <https_port>8443</https_port>
+
+    <!--    <interserver_http_port>9009</interserver_http_port>-->
+    <interserver_https_port>9010</interserver_https_port>
+
+    <listen_host>0.0.0.0</listen_host>
+
+    <tcp_port>9000</tcp_port>
+    <listen_host_tcp_port>::1</listen_host_tcp_port>
+    <listen_host_tcp_port>127.0.0.1</listen_host_tcp_port>
+
+    <tcp_port_secure>9440</tcp_port_secure>
+    <listen_host_tcp_port_secure>0.0.0.0</listen_host_tcp_port_secure>
+
+    <openSSL>
+        <server>
+            <caConfig>/etc/clickhouse-server/ca.pem</caConfig>
+            <certificateFile>/etc/clickhouse-server/server.pem</certificateFile>
+            <privateKeyFile>/etc/clickhouse-server/server.key</privateKeyFile>
+            <verificationMode>none</verificationMode>
+            <loadDefaultCAFile>true</loadDefaultCAFile>
+            <cacheSessions>true</cacheSessions>
+            <disableProtocols>sslv2,sslv3</disableProtocols>
+            <preferServerCiphers>true</preferServerCiphers>
+        </server>
+    </openSSL>
+
+    <remote_servers>
+        <default>
+              <shard>
+                <replica>
+                    <host>localhost</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+            </shard>
+        </default>
+    </remote_servers>
+    <profiles>
+        <default>
+            <prefer_secure_connections>1</prefer_secure_connections>
+            <use_client_protocol_for_cluster_connections>1</use_client_protocol_for_cluster_connections>
+        </default>
+    </profiles>
+
+</clickhouse>

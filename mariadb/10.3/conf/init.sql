@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS test_ssl;
+CREATE USER 'test_ssl'@'%' IDENTIFIED BY 'test_ssl' REQUIRE SSL;
+GRANT ALL ON test_ssl.* TO 'test_ssl'@'%';
+FLUSH PRIVILEGES;
+
+GRANT CREATE USER ON *.* TO 'guest';
+GRANT SELECT ON mysql.* TO 'guest';
+FLUSH PRIVILEGES;
