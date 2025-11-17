@@ -6,22 +6,14 @@ ENV MSSQL_SA_PASSWORD=My@Super@Secret
 
 USER root
 
-# fts plugin 2022 need to be replaced when 2025 version is available
 RUN apt-get update && \
-    apt-get install -yq iproute2  \
+    apt-get install -y \
+    curl \
+    iproute2 \
     debconf-utils \
     gnupg2 \
     vim \
-    unixodbc-dev \
-    curl \
-    apt-transport-https \
-    ca-certificates && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list \
-    -o /etc/apt/sources.list.d/mssql-server-2022.list && \
-    apt-get update && \
-    apt-get install -y mssql-server-fts && \
-    apt-get clean && \
+    unixodbc-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ADD ./entrypoint.sh /
