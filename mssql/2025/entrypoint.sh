@@ -5,7 +5,6 @@ set -e
 
 export MSSQL_PID=$!
 export SQLCMD_PATH=/opt/mssql-tools18/bin/sqlcmd
-export MSSQL_SA_PASSWORD=My@Super@Secret
 
 # Wait until server starts
 echo "Waiting for SQL Server to start..."
@@ -17,30 +16,6 @@ do
   sleep 5
 done
 echo "SQL Server started successfully"
-
-# Running SQL-scripts
-echo =============== SETTING ENVIRONMENT ==========================
-
-if [ ! -z $MSSQL_USER ]; then
-	echo "MSSQL_USER: $MSSQL_USER"
-else
-	MSSQL_USER=tester
-	echo "MSSQL_USER: $MSSQL_USER"
-fi
-
-if [ ! -z $MSSQL_PASSWORD ]; then
-	echo "MSSQL_PASSWORD: $MSSQL_PASSWORD"
-else
-	MSSQL_PASSWORD=My@Super@Secret
-	echo "MSSQL_PASSWORD: $MSSQL_PASSWORD"
-fi
-
-if [ ! -z $MSSQL_DB ]; then
-	echo "MSSQL_DB: $MSSQL_DB"
-else
-	MSSQL_DB=testdb
-	echo "MSSQL_DB: $MSSQL_DB"
-fi
 
 echo =============== CREATING INIT DATA ==========================
 
