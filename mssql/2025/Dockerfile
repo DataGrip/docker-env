@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/mssql/server:2025-RC1-ubuntu-22.04
 
 ENV MSSQL_PID=Developer
 ENV ACCEPT_EULA=Y
-ENV MSSQL_SA_PASSWORD=My@Super@Secret
 
 USER root
 
