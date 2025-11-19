@@ -1,0 +1,102 @@
+#!/bin/bash
+
+CERT_DIR="${CERT_DIR:-certs}"
+
+mkdir -p "$CERT_DIR"
+
+generate_cert() {
+    local name=$1
+    local cn="$2"
+    local san="$3"
+
+    if [ -z "$san" ]; then
+        echo "ERROR: SAN is required for certificate '$name'"
+        return 1
+    fi
+
+    local keyfile="$CERT_DIR/${name}.key"
+    local certfile="$CERT_DIR/${name}.crt"
+
+    [ -f "$keyfile" ] || openssl genrsa -out "$keyfile" 2048
+
+    local tmpconf="$CERT_DIR/${name}_san.cnf"
+    cat > "$tmpconf" <<_SAN_
+[ req ]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+
+[ req_distinguished_name ]
+
+[ v3_req ]
+subjectAltName = $san
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+_SAN_
+
+    openssl req \
+        -new -sha256 \
+        -subj "/O=Redis/CN=$cn" \
+        -key "$keyfile" \
+        -config "$tmpconf" \
+        -out "$CERT_DIR/${name}.csr"
+
+    openssl x509 \
+        -req -sha256 \
+        -in "$CERT_DIR/${name}.csr" \
+        -CA "$CERT_DIR/ca.crt" \
+        -CAkey "$CERT_DIR/ca.key" \
+        -CAcreateserial \
+        -days 365 \
+        -extensions v3_req \
+        -extfile "$tmpconf" \
+        -out "$certfile"
+
+    local result=$?
+    rm -f "$tmpconf" "$CERT_DIR/${name}.csr"
+
+    if [ $result -eq 0 ]; then
+        echo "Generated: $certfile"
+        return 0
+    else
+        echo "Failed to generate: $certfile"
+        return 1
+    fi
+}
+
+echo "Generating CA..."
+[ -f "$CERT_DIR/ca.key" ] || openssl genrsa -out "$CERT_DIR/ca.key" 4096
+openssl req \
+    -x509 -new -nodes -sha256 \
+    -key "$CERT_DIR/ca.key" \
+    -days 3650 \
+    -subj '/O=Redis/CN=Certificate Authority' \
+    -out "$CERT_DIR/ca.crt"
+
+if [ $? -eq 0 ]; then
+    echo "CA created"
+else
+    echo "Failed to create CA"
+    exit 1
+fi
+echo ""
+
+echo "Generating server certificate..."
+generate_cert server "localhost" "DNS:localhost,DNS:redis,IP:127.0.0.1,IP:::1" || exit 1
+echo ""
+
+echo "Generating client certificate..."
+generate_cert client "localhost" "DNS:localhost,DNS:redis,IP:127.0.0.1,IP:::1" || exit 1
+echo ""
+
+echo "Verification..."
+echo ""
+echo "Server certificate SAN:"
+openssl x509 -in "$CERT_DIR/server.crt" -noout -text | grep -A1 "Subject Alternative Name"
+
+echo ""
+echo "Client certificate SAN:"
+openssl x509 -in "$CERT_DIR/client.crt" -noout -text | grep -A1 "Subject Alternative Name"
+
+echo ""
+echo "Files created in $CERT_DIR/"
+ls -lh "$CERT_DIR/"/*.{crt,key} 2>/dev/null || ls -lh "$CERT_DIR/"
