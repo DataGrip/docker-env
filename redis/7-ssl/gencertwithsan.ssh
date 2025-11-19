@@ -46,7 +46,7 @@ _SAN_
         -CA "$CERT_DIR/ca.crt" \
         -CAkey "$CERT_DIR/ca.key" \
         -CAcreateserial \
-        -days 365 \
+        -days 3650 \
         -extensions v3_req \
         -extfile "$tmpconf" \
         -out "$certfile"
