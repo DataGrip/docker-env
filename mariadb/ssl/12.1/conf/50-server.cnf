@@ -1,0 +1,16 @@
+[server]
+[mariadbd]
+
+pid-file                = /run/mysqld/mysqld.pid
+basedir                 = /usr
+
+ssl-ca = /etc/mysql/cacert.pem
+ssl-cert = /etc/mysql/server-cert.pem
+ssl-key = /etc/mysql/server-key.pem
+require-secure-transport = on
+
+[embedded]
+[mariadbd]
+[mariadb-12.1]
+
+
