@@ -6,9 +6,13 @@ Also see https://github.com/DataGrip/docker-env-oracle for Oracle 11 and https:/
 
 ### Create certificates
 
-For creating self-signed certificates run:
+For creating self-signed certificates run:  
 
-`CERT_DIR=</path/to/certificates> CERT_CN="<your-CN-name>" DOMAIN="<your-domain-name>" DAYS=<certificates-duration> KEY_SIZE=<key-size> ./ssl/generatessl.bash`
+#### With default values:
+`./generatessl.sh`  
+
+#### With custom values:  
+`CERT_DIR=</path/to/certificates> CERT_CN="<your-CN-name>" DOMAIN=<your-domain-name> DAYS=<certificates-duration> KEY_SIZE=<key-size> ./generatessl.sh`  
 
 **The default values are:**  
 CERT_DIR = ./certs  
@@ -17,8 +21,8 @@ DOMAIN = localhost
 DAYS = 3650  
 KEY_SIZE = 2048
 
-Example:  
-`CERT_DIR=./ssl/clickhouse/25/certs CERT_CN="Clickhouse" ./ssl/generatessl.bash`  
+**Example**:  
+`CERT_DIR=./clickhouse/ssl/25/certs CERT_CN="Clickhouse" DOMAIN=my.domain DAYS=30 KEY_SIZE=4096 ./generatessl.sh`    
   
-Check the certificate:  
-`openssl.exe x509 -in path/to/your/cert -noout -text`  
+**Check the certificate**:    
+`openssl x509 -in path/to/your/cert -noout -text`    
