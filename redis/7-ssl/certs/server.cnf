@@ -1,0 +1,21 @@
+[req]
+distinguished_name = req_dn
+prompt = no
+req_extensions = v3_req
+
+[req_dn]
+CN = localhost
+
+[v3_req]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = DNS:localhost,IP:127.0.0.1,IP:::1
+
+[v3_ext]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = DNS:localhost,IP:127.0.0.1,IP:::1
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
