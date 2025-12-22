@@ -1,8 +1,0 @@
-[connection]
-ssl = true
-
-[ssl]
-certfile = /etc/cassandra/certs/ca-cert.pem
-userkey = /etc/cassandra/certs/client-key.pem
-usercert = /etc/cassandra/certs/client-cert.pem
-validate = true
