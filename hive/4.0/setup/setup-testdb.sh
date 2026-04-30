@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex pipefail
 
-echo "Waiting for HiveServer2..."
+echo "Waiting for HiveServer2"
 
 while true; do
   count=$(grep -cF "Hive Session ID =" "/tmp/hive/hive.log" 2>/dev/null || echo 0)
@@ -11,18 +11,13 @@ while true; do
   sleep 5
 done
 
-echo "HiveServer2 is ready to connect!"
+echo "HiveServer2 is ready to connect"
 
-if [ ! -z $HIVE_TEST_DB ]; then
-    echo "HIVE_TEST_DB: $HIVE_TEST_DB"
-else
-	HIVE_TEST_DB=testdb
-    echo "HIVE_TEST_DB: $HIVE_TEST_DB"
-fi
+HIVE_TEST_DB=testdb
 
 cat << EOF
 +--------------------------------------------------+
-|               CREATE DATABASE $HIVE_TEST_DB;            |
+|               CREATE DATABASE $HIVE_TEST_DB            |
 +--------------------------------------------------+
 EOF
 
