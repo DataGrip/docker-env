@@ -12,4 +12,6 @@ RUN chmod a+x /var/custom/createschema.sh
 RUN chmod a+x /var/sql/init.sql
 RUN chmod a+x /var/sql/initspatial.sql
 
+RUN sed -ri 's/^(PASS_MAX_DAYS\s+).*/\199999/' /etc/login.defs
+
 EXPOSE 50000

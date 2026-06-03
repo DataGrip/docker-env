@@ -12,4 +12,6 @@ RUN chown -R 1000:1000 /var/custom
 RUN chmod +x /var/custom/*.sh
 RUN chown -R 1000:1000 /var/scripts
 
+RUN sed -ri 's/^(PASS_MAX_DAYS\s+).*/\199999/' /etc/login.defs
+
 EXPOSE 50000
