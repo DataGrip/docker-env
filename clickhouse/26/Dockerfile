@@ -2,6 +2,7 @@ FROM clickhouse/clickhouse-server:26.3
 
 COPY ./data/os.tsv /opt/dictionaries/os.tsv
 COPY ./config/test_dictionary.xml /opt/dictionaries/test_dictionary.xml
+# ReadOnly user
 COPY ./config/readonly-user.xml /etc/clickhouse-server/users.d/readonly-user.xml
 
 ENV CLICKHOUSE_CONFIG=/etc/clickhouse-server/config.xml
