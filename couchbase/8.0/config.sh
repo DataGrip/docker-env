@@ -37,39 +37,48 @@ fi
 # Initialize Node
 curl  -u Administrator:password -v -X POST \
   http://localhost:8091/nodes/self/controller/settings \
-  -d 'path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&' \
-  -d 'index_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&' \
-  -d 'cbas_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&' \
-  -d 'eventing_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata&'
+  -d 'path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata' \
+  -d 'index_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata' \
+  -d 'cbas_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata' \
+  -d 'eventing_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata'
 
 # services
-curl  -u Administrator:password -v -X POST http://localhost:8091/node/controller/setupServices \
+curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091/node/controller/setupServices \
   -d 'services=kv%2Cn1ql%2Cindex%2Cfts'
 
 # Memory Quotas
-curl  -u Administrator:password -v -X POST http://localhost:8091/pools/default \
-  -d 'memoryQuota=256' \
-  -d 'indexMemoryQuota=256' \
-  -d 'ftsMemoryQuota=256'
+curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091/pools/default \
+  -d 'memoryQuota=512' \
+  -d 'indexMemoryQuota=256'
 
 # Administrator username and password
 curl  -u Administrator:password -v -X POST http://localhost:8091/settings/web \
-  -d 'password=password&username=Administrator&port=SAME'
-
-# bucket
-curl  -u Administrator:password -v -X POST http://localhost:8091/pools/default/buckets \
-  -d 'flushEnabled=1&threadsNumber=3&replicaIndex=0&replicaNumber=0& \
-  evictionPolicy=valueOnly&ramQuotaMB=256&bucketType=membase&name=guest'
+  -d 'password=password' \
+  -d 'username=Administrator' \
+  -d 'port=SAME'
 
 # indexes
-curl -v -X POST http://127.0.0.1:8091/settings/indexes \
--u Administrator:password \
--d indexerThreads=0 \
--d logLevel=info \
--d maxRollbackPoints=5 \
--d memorySnapshotInterval=200 \
--d stableSnapshotInterval=5000 \
--d storageMode=memory_optimized
+curl --fail-with-body -v -X POST http://127.0.0.1:8091/settings/indexes \
+-u Administrator:password  \
+--data-urlencode 'storageMode=plasma' \
+--data-urlencode 'indexerThreads=0' \
+--data-urlencode 'logLevel=info' \
+--data-urlencode 'maxRollbackPoints=5' \
+--data-urlencode 'memorySnapshotInterval=200' \
+--data-urlencode 'stableSnapshotInterval=5000'
+
+
+# bucket
+curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091/pools/default/buckets \
+  -d 'flushEnabled=1' \
+  -d 'threadsNumber=3' \
+  -d 'replicaIndex=0' \
+  -d 'replicaNumber=0' \
+  -d 'evictionPolicy=valueOnly' \
+  -d 'ramQuotaMB=256' \
+  -d 'bucketType=membase' \
+  -d 'name=guest'
+
 
 # admin user
 curl -v -X  PUT -u Administrator:password \
