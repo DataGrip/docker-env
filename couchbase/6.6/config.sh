@@ -44,7 +44,7 @@ curl -v -X POST http://127.0.0.1:8091/settings/indexes \
 -d maxRollbackPoints=5 \
 -d memorySnapshotInterval=200 \
 -d stableSnapshotInterval=5000 \
--d storageMode=memory_optimized
+-d storageMode=plasma
 
 curl -v -X  PUT -u Administrator:password \
 http://localhost:8091/settings/rbac/users/local/admin \
