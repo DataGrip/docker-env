@@ -53,8 +53,8 @@ curl -v -f -u Administrator:password -X POST http://localhost:8091/node/controll
 
 # Memory Quotas
 curl -v -f -u Administrator:password -X POST http://localhost:8091/pools/default \
-  -d 'memoryQuota=256' \
-  -d 'indexMemoryQuota=256' \
+  -d 'memoryQuota=1024' \
+  -d 'indexMemoryQuota=1024' \
   -d 'ftsMemoryQuota=256'
 
 # Administrator username and password
