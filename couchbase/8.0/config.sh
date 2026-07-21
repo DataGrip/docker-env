@@ -1,12 +1,13 @@
 #!/bin/bash
 
 set -m
+set -e
 
 /entrypoint.sh couchbase-server &
 
 export STATUS=0
 i=0
-while (( $i < 30 )); do
+while (( $i < 600 )); do
 	sleep 1
 	i=$((i+1))
 	echo $i
@@ -16,6 +17,10 @@ while (( $i < 30 )); do
  		break
  	fi
 done
+if (( $STATUS == 0 )); then
+	echo "ERROR: Couchbase server did not start within 90s" >&2
+	exit 1
+fi
 
 yes | ./opt/couchbase/bin/couchbase-cli enable-developer-preview --enable -c localhost:8091 -u Administrator -p password
 
@@ -33,31 +38,31 @@ else
 	echo "COUCH_USRPWD: $COUCH_USRPWD"
 fi
 
-
-# Initialize Node
-curl  -u Administrator:password -v -X POST \
+echo "=============== Initialize Node ==============="
+curl --fail-with-body -v -u Administrator:password -X POST \
   http://localhost:8091/nodes/self/controller/settings \
   -d 'path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata' \
   -d 'index_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata' \
   -d 'cbas_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata' \
   -d 'eventing_path=%2Fopt%2Fcouchbase%2Fvar%2Flib%2Fcouchbase%2Fdata'
 
-# services
-curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091/node/controller/setupServices \
+echo "=============== Memory Quotas ==============="
+curl --fail-with-body -v -u Administrator:password -X POST http://localhost:8091/pools/default \
+  -d 'memoryQuota=1024' \
+  -d 'indexMemoryQuota=1024' \
+  -d 'ftsMemoryQuota=1024'
+
+echo "=============== Services ==============="
+curl --fail-with-body -v -u Administrator:password -X POST http://localhost:8091/node/controller/setupServices \
   -d 'services=kv%2Cn1ql%2Cindex%2Cfts'
 
-# Memory Quotas
-curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091/pools/default \
-  -d 'memoryQuota=512' \
-  -d 'indexMemoryQuota=256'
-
-# Administrator username and password
-curl  -u Administrator:password -v -X POST http://localhost:8091/settings/web \
+echo "=============== Administrator username and password ==============="
+curl --fail-with-body -v -u Administrator:password -X POST http://localhost:8091/settings/web \
   -d 'password=password' \
   -d 'username=Administrator' \
   -d 'port=SAME'
 
-# indexes
+echo "=============== Indexes ==============="
 curl --fail-with-body -v -X POST http://127.0.0.1:8091/settings/indexes \
 -u Administrator:password  \
 --data-urlencode 'storageMode=plasma' \
@@ -68,8 +73,8 @@ curl --fail-with-body -v -X POST http://127.0.0.1:8091/settings/indexes \
 --data-urlencode 'stableSnapshotInterval=5000'
 
 
-# bucket
-curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091/pools/default/buckets \
+echo "=============== Bucket ==============="
+curl --fail-with-body -v -u Administrator:password -X POST http://localhost:8091/pools/default/buckets \
   -d 'flushEnabled=1' \
   -d 'threadsNumber=3' \
   -d 'replicaIndex=0' \
@@ -80,14 +85,14 @@ curl --fail-with-body -u Administrator:password -v -X POST http://localhost:8091
   -d 'name=guest'
 
 
-# admin user
-curl -v -X  PUT -u Administrator:password \
+echo "=============== Admin user ==============="
+curl --fail-with-body -v -X  PUT -u Administrator:password \
 http://localhost:8091/settings/rbac/users/local/admin \
 -d password=$COUCH_ADMPWD \
 -d roles=admin
 
-# read only admin
-curl -v -X  PUT -u Administrator:password \
+echo "=============== Read only admin ==============="
+curl --fail-with-body -v -X  PUT -u Administrator:password \
 http://localhost:8091/settings/rbac/users/local/roadmin \
 -d password=$COUCH_USRPWD \
 -d roles=ro_admin
