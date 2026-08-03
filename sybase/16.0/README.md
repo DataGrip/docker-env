@@ -21,3 +21,7 @@ Create container
 ```bash
 docker run -d -t -p 5000:5000 datagrip/sybase162
 ```
+
+
+
+See also: http://www.petersap.nl/SybaseWiki/index.php/Docker_-_How_to_run_Sybase_ASE_in_a_container
