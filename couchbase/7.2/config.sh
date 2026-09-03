@@ -11,15 +11,10 @@ COUCH_USRPWD="${COUCH_USRPWD:-239dGr3En}"
 CB_RAM_MB="${CB_RAM_MB:-1024}"
 CB_INDEX_RAM_MB="${CB_INDEX_RAM_MB:-1024}"
 CB_FTS_RAM_MB="${CB_FTS_RAM_MB:-256}"
-CB_ANALYTICS_RAM_MB="${CB_ANALYTICS_RAM_MB:-1024}"
-
-CB_BUCKET="${CB_BUCKET:-ea-storage}"
-CB_SCOPE="${CB_SCOPE:-app}"
-CB_COLLECTION="${CB_COLLECTION:-events}"
 
 CB_DATA_PATH=/opt/couchbase/var/lib/couchbase/data
 CB_API=http://127.0.0.1:8091
-CB_ANALYTICS=http://127.0.0.1:8095/analytics/service
+CB_QUERY=http://127.0.0.1:8093/query/service
 
 cb() {
 	local code
@@ -30,12 +25,6 @@ cb() {
 		2*) return 0 ;;
 		*)  echo "ERROR: HTTP $code" >&2; return 1 ;;
 	esac
-}
-
-analytics() {
-	cb "$CB_ANALYTICS" \
-		-H 'Content-Type: application/json' \
-		--data-binary "{\"statement\":\"$1\"}"
 }
 
 wait_for() {
@@ -60,12 +49,11 @@ echo "Initialize Node"
 cb -X POST "$CB_API/nodes/self/controller/settings" \
 	--data-urlencode "path=$CB_DATA_PATH" \
 	--data-urlencode "index_path=$CB_DATA_PATH" \
-	--data-urlencode "cbas_path=$CB_DATA_PATH" \
 	--data-urlencode "eventing_path=$CB_DATA_PATH"
 
 echo "Set services"
 cb -X POST "$CB_API/node/controller/setupServices" \
-	--data-urlencode 'services=kv,n1ql,index,fts,cbas'
+	--data-urlencode 'services=kv,n1ql,index,fts'
 
 echo "Set administrator username and password"
 cb -X POST "$CB_API/settings/web" \
@@ -79,8 +67,7 @@ echo "Set memory quotas"
 cb -X POST "$CB_API/pools/default" \
 	--data-urlencode "memoryQuota=$CB_RAM_MB" \
 	--data-urlencode "indexMemoryQuota=$CB_INDEX_RAM_MB" \
-	--data-urlencode "ftsMemoryQuota=$CB_FTS_RAM_MB" \
-	--data-urlencode "cbasMemoryQuota=$CB_ANALYTICS_RAM_MB"
+	--data-urlencode "ftsMemoryQuota=$CB_FTS_RAM_MB"
 
 echo "Set Developer preview"
 yes | /opt/couchbase/bin/couchbase-cli enable-developer-preview --enable \
@@ -105,6 +92,12 @@ cb -X POST "$CB_API/pools/default/buckets" \
   --data-urlencode 'ramQuotaMB=256' \
   --data-urlencode 'bucketType=membase' \
   --data-urlencode 'name=guest'
+
+echo "Create document in bucket guest"
+wait_for "query service" cb "$CB_QUERY" \
+	--data-urlencode 'statement=SELECT RAW META().id FROM `guest` USE KEYS ["seed"]'
+cb "$CB_QUERY" \
+	--data-urlencode 'statement=INSERT INTO `guest` (KEY, VALUE) VALUES ("seed", {"seed": true})'
 
 echo "Set Admin user"
 cb -X PUT "$CB_API/settings/rbac/users/local/admin" \
