@@ -2,6 +2,18 @@
 export SYBASE=/opt/sybase
 source /opt/sybase/SYBASE.sh
 
+# Sizes are in MiB
+: "${SYBASE_DATA_SIZE_MB:=2048}"
+: "${SYBASE_LOG_SIZE_MB:=1024}"
+: "${SYBASE_NUMBER_OF_LOCKS:=50000}"
+
+for setting in SYBASE_DATA_SIZE_MB SYBASE_LOG_SIZE_MB SYBASE_NUMBER_OF_LOCKS; do
+  if [[ ! ${!setting} =~ ^[1-9][0-9]*$ ]]; then
+    echo "$setting must be a positive integer" >&2
+    exit 1
+  fi
+done
+
 sh /opt/sybase/SYBASE.sh && sh /opt/sybase/ASE-16_0/install/RUN_MYSYBASE > /dev/null &
 
 #waiting for sybase to start
@@ -57,11 +69,15 @@ echo =============== CREATING LOGIN/PWD ==========================
 cat <<-EOSQL > init1.sql
 use master
 go
-disk resize name='master', size='60m'
+-- Keep user data and the transaction log off the master device.
+disk init name='app_data', physname='/opt/sybase/data/app_data.dat', size='${SYBASE_DATA_SIZE_MB}M'
 go
-create database $SYBASE_DB on master = '48m'
+disk init name='app_log', physname='/opt/sybase/data/app_log.dat', size='${SYBASE_LOG_SIZE_MB}M'
 go
-exec sp_extendsegment logsegment, $SYBASE_DB, master
+create database $SYBASE_DB on app_data = '${SYBASE_DATA_SIZE_MB}M' log on app_log = '${SYBASE_LOG_SIZE_MB}M'
+go
+-- Allow larger concurrent write transactions without exhausting the lock pool.
+exec sp_configure 'number of locks', $SYBASE_NUMBER_OF_LOCKS
 go
 create login $SYBASE_USER with password $SYBASE_PASSWORD
 go
@@ -78,6 +94,10 @@ go
 exec sp_dboption $SYBASE_DB, 'full logging for alter table', true
 go
 sp_dboption $SYBASE_DB, "select into", true
+go
+use $SYBASE_DB
+go
+checkpoint
 go
 
 EOSQL
