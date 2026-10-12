@@ -1,4 +1,4 @@
-FROM postgres:17
+FROM postgres:17.6
 
 COPY ./conf/pg_hba.conf /usr/share/postgresql/17/pg_hba.conf.sample
 COPY ./conf/postgresql.conf /usr/share/postgresql/17/postgresql.conf.sample

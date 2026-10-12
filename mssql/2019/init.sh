@@ -70,9 +70,9 @@ RECONFIGURE;
 GO
 EOSQL
 
-cd /opt/mssql-tools/bin/
-./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init.sql" -o"/opt/mssql/initout.log"
-./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init_memory.sql" -o"/opt/mssql/initout2.log"
+cd /opt/mssql-tools18/bin/
+./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init.sql" -o"/opt/mssql/initout.log" -C
+./sqlcmd -S localhost -U sa -P $SA_PASSWORD -t 30 -i"/opt/mssql/init_memory.sql" -o"/opt/mssql/initout2.log" -C
 
 echo =============== INIT DATA CREATED ==========================
 echo =============== MSSQL SERVER SUCCESSFULLY STARTED ==========================

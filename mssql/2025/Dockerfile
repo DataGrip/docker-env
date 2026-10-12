@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/mssql/server:2025-RTM-ubuntu-22.04
+FROM mcr.microsoft.com/mssql/server:2025-CU9-ubuntu-22.04
 
 ENV MSSQL_PID=Developer
 ENV ACCEPT_EULA=Y

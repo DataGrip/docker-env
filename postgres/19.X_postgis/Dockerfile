@@ -1,8 +1,8 @@
-FROM postgres:19beta2
+FROM postgres:19beta4
 
 COPY ./conf/pg_hba.conf /usr/share/postgresql/19/pg_hba.conf.sample
 COPY ./conf/postgresql.conf /usr/share/postgresql/19/postgresql.conf.sample
-RUN chown postgres.postgres /usr/share/postgresql/19/pg_hba.conf.sample \
+RUN chown postgres:postgres /usr/share/postgresql/19/pg_hba.conf.sample \
                             /usr/share/postgresql/19/postgresql.conf.sample && \
     apt-get update && \
     apt-get install -y postgis postgresql-19-postgis-3-scripts postgresql-19-pgrouting osm2pgrouting
