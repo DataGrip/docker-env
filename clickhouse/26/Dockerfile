@@ -1,4 +1,4 @@
-FROM clickhouse/clickhouse-server:26.3
+FROM clickhouse/clickhouse-server:26.3.12.3
 
 COPY ./data/os.tsv /opt/dictionaries/os.tsv
 COPY ./config/test_dictionary.xml /opt/dictionaries/test_dictionary.xml

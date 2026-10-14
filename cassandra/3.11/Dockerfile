@@ -1,11 +1,11 @@
-FROM cassandra:3
+FROM cassandra:3.11.4
 
 ADD entrypoint.sh /
 ADD init.sh /
 ADD AuditTrigger.jar /etc/cassandra/triggers/
 ADD AuditTrigger.properties /etc/cassandra/
 
-ENV CASSANDRA_CONFIG /etc/cassandra
+ENV CASSANDRA_CONFIG=/etc/cassandra
 
 RUN chmod +x /entrypoint.sh && \
 	chmod +x /init.sh
