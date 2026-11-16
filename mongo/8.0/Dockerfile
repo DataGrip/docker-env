@@ -1,4 +1,4 @@
-FROM mongo:8.0
+FROM mongo:8.0.34
 
 ENV AUTH=yes
 ENV STORAGE_ENGINE=wiredTiger
