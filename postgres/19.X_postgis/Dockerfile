@@ -1,4 +1,4 @@
-FROM postgres:19beta4
+FROM postgres:19.0
 
 COPY ./conf/pg_hba.conf /usr/share/postgresql/19/pg_hba.conf.sample
 COPY ./conf/postgresql.conf /usr/share/postgresql/19/postgresql.conf.sample
