@@ -20,18 +20,18 @@ RUN apt-get update && apt-get install -y \
     debconf-utils \
     gnupg2 \
     locales \
+    && curl -fsSL -O https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && rm packages-microsoft-prod.deb \
+    && curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list \
+       -o /etc/apt/sources.list.d/mssql-server.list \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get install -y \
+       mssql-server-fts \
+       msodbcsql18 \
+       mssql-tools18 \
     && rm -rf /var/lib/apt/lists/*
 
-# adding custom MS repository
-RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
-    | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
-RUN echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" \
-    > /etc/apt/sources.list.d/microsoft-prod.list
-
-# install SQL Server drivers and tools
-RUN apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 \
-    && rm -rf /var/lib/apt/lists/*
 RUN locale-gen en_US.UTF-8 \
         && update-locale LANG=en_US.UTF-8
 
